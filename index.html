@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>⚡ Power Hub Quiz ⚡</title>
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin:0; padding:0;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:#fff;
+}
+header {
+  background:#0078d7; color:#fff;
+  padding:20px; text-align:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+header h1 { margin:0; font-size:32px; letter-spacing:1px; }
+.container {
+  max-width:1100px; margin:30px auto;
+  background:#1c1c1c; padding:25px;
+  border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.5);
+}
+h2 { text-align:center; color:#58a6ff; }
+button {
+  padding:10px 18px; margin:8px;
+  background:linear-gradient(135deg,#0078d7,#005fa3);
+  color:#fff; border:none; border-radius:8px;
+  cursor:pointer; font-weight:bold;
+  transition:0.3s;
+}
+button:hover { transform:scale(1.05); box-shadow:0 0 12px #58a6ff; }
+#timer { font-weight:bold; color:#f85149; text-align:right; }
+.hub {
+  border:2px solid #0078d7;
+  margin:20px 0; padding:15px;
+  border-radius:10px; background:#2c2c2c;
+}
+.node {
+  margin:10px 0; padding:12px;
+  border-radius:8px; background:#3a3a3a;
+  opacity:0.3; pointer-events:none;
+  transition:opacity 0.5s ease, transform 0.5s ease;
+}
+.node.active {
+  opacity:1; pointer-events:auto;
+  border:2px solid #28a745;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+.node.completed {
+  border:2px solid #17a2b8;
+  animation:none;
+}
+@keyframes glow {
+  from { box-shadow:0 0 5px #28a745; }
+  to { box-shadow:0 0 20px #28a745; }
+}
+.options label {
+  display:block; margin:6px 0;
+  padding:8px; border-radius:6px;
+  background:#444; cursor:pointer;
+}
+.options label:hover { background:#555; }
+.circuit-animation {
+  width:100%; height:5px;
+  background:linear-gradient(90deg,#28a745,#0078d7);
+  background-size:200% 100%;
+  animation:circuit 1s linear forwards;
+}
+@keyframes circuit {
+  from {background-position:0 0;}
+  to {background-position:-200% 0;}
+}
+#feedbackForm, #resultPage, #organiserPanel { display:none; }
+.correct-answer { background:#28a745; padding:3px 6px; border-radius:6px; }
+
+/* Feedback form animation */
+#feedbackForm {
+  animation: slideUp 1s ease forwards;
+}
+@keyframes slideUp {
+  from { transform:translateY(50px); opacity:0; }
+  to { transform:translateY(0); opacity:1; }
+}
+#feedbackForm input, #feedbackForm textarea {
+  width:100%; padding:12px; margin:10px 0;
+  border-radius:8px; border:none;
+  background:#2c2c2c; color:#fff;
+  transition:0.3s;
+}
+#feedbackForm input:focus, #feedbackForm textarea:focus {
+  outline:none; box-shadow:0 0 10px #58a6ff;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚡ Power Hub Quiz ⚡</h1>
+  <div id="timer">40:00</div>
+</header>
+
+<div class="container" id="participantSection">
+  <h2>Participant Login</h2>
+  <input type="text" id="participantName" placeholder="Enter Name">
+  <input type="text" id="participantRoll" placeholder="Enter Roll Number">
+  <button onclick="startQuiz()">Start Quiz</button>
+  <button onclick="organiserLogin()">Organiser Login</button>
+</div>
+
+<div class="container" id="quizSection" style="display:none;">
+  <h2>Power Hubs</h2>
+  <div id="hubsContainer"></div>
+  <button onclick="submitQuiz()">Submit Quiz</button>
+</div>
+
+<div class="container" id="feedbackForm">
+  <h2>Feedback Form</h2>
+  <input type="text" id="fbName" placeholder="Your Name">
+  <textarea id="fbText" placeholder="Your Feedback"></textarea>
+  <button onclick="submitFeedback()">Submit Feedback</button>
+</div>
+
+<div class="container" id="resultPage"></div>
+
+<div class="container" id="organiserPanel">
+  <h2>Organiser Panel</h2>
+  <div id="resultsTable"></div>
+</div>
+
+<script>
+const organiserPassword="admin123";
+
+// Generate 10 hubs × 3 nodes (dummy questions)
+let questions=[];
+for(let h=1;h<=10;h++){
+  for(let n=1;n<=3;n++){
+    questions.push({
+      hub:h,node:n,
+      q:`Hub ${h} - Question ${n}?`,
+      options:["Option A","Option B","Option C","Option D"],
+      answer:Math.floor(Math.random()*4)
+    });
+  }
+}
+
+let participant={};
+let startTime,timerInterval,timeLeft=40*60;
+
+function startQuiz(){
+ const name=document.getElementById("participantName").value.trim();
+ const roll=document.getElementById("participantRoll").value.trim();
+ if(!name||!roll){alert("Enter name and roll number");return;}
+ if(localStorage.getItem("attempt_"+roll)){
+   alert("Already attempted! Showing previous score.");
+   document.getElementById("participantSection").style.display="none";
+   document.getElementById("resultPage").style.display="block";
+   document.getElementById("resultPage").innerHTML=localStorage.getItem("attempt_"+roll);
+   return;
+ }
+ participant={name,roll,answers:{},score:0};
+ startTime=Date.now();
+ document.getElementById("participantSection").style.display="none";
+ document.getElementById("quizSection").style.display="block";
+ renderHubs();
+ startTimer();
+}
+
+function renderHubs(){
+ const container=document.getElementById("hubsContainer");
+ container.innerHTML="";
+ for(let h=1;h<=10;h++){
+   const hubDiv=document.createElement("div");
+   hubDiv.className="hub";
+   hubDiv.innerHTML="<h3>Hub "+h+"</h3>";
+   for(let n=1;n<=3;n++){
+     const nodeDiv=document.createElement("div");
+     nodeDiv.className="node"+(n===1?" active":"");
+     nodeDiv.id="hub"+h+"node"+n;
+     nodeDiv.innerHTML=`<button onclick="openQuestion(${h},${n})">Q${n}</button>`;
+     hubDiv.appendChild(nodeDiv);
+   }
+   const divertBtn=document.createElement("button");
+   divertBtn.innerText="Divert Power to Hub "+((h%10)+1);
+   divertBtn.onclick=()=>scrollToHub((h%10)+1);
+   hubDiv.appendChild(divertBtn);
+   container.appendChild(hubDiv);
+ }
+}
+
+function openQuestion(h,n){
+ const qObj=questions.find(q=>q.hub===h&&q.node===n);
+ const nodeDiv=document.getElementById(`hub${h}node${n}`);
+ nodeDiv.innerHTML="";
+ const qText=document.createElement("p");
+ qText.textContent=qObj.q;
+ nodeDiv.appendChild(qText);
+ const optsDiv=document.createElement("div");
+ optsDiv.className="options";
+ qObj.options.forEach((opt,i)=>{
+   const lbl=document.createElement("label");
+   lbl.innerHTML=`<input type="radio" name="hub${h}node${n}" value="${i}" onclick="lockAnswer(this)"> ${opt}`;
+   optsDiv.appendChild(lbl);
+ });
+ nodeDiv.appendChild(optsDiv);
+ const btn=document.createElement("button");
+ btn.textContent="Submit Answer";
+ btn.onclick=()=>checkAnswer(h,n,qObj.answer);
+ nodeDiv.appendChild(btn);
+}
+
+// Lock answer once chosen
+function lockAnswer(input){
+  const radios=document.getElementsByName(input.name);
+  radios.forEach(r=>{
+    if(r!==input){ r.disabled=true; }
+  });
+}
+
+function checkAnswer(h,n,correctIndex){
+ const selected=document.querySelector(`input[name="hub${h}node${n}"]:checked`);
+ if(!selected){alert("Please select an option");return;}
+ const val=parseInt(selected.value);
+ participant.answers[`hub${h}node${n}`]=val;
+ 
+  const nodeDiv=document.getElementById(`hub${h}node${n}`);
+  nodeDiv.classList.add("completed");
+
+  if(val===correctIndex){
+    participant.score++;
+    if(n<3){
+      const nextNode=document.getElementById(`hub${h}node${n+1}`);
+      nextNode.classList.add("active");
+      const anim=document.createElement("div");
+      anim.className="circuit-animation";
+      nodeDiv.appendChild(anim);
+    }
+  }
+}
+
+function scrollToHub(h){
+  document.getElementById(`hub${h}node1`).scrollIntoView({behavior:"smooth"});
+}
+
+function startTimer(){
+  updateTimer();
+  timerInterval=setInterval(()=>{
+    timeLeft--; updateTimer();
+    if(timeLeft<=0){
+      clearInterval(timerInterval);
+      submitQuiz();
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(timeLeft/60), s=timeLeft%60;
+  document.getElementById("timer").textContent=`Time Left: ${m}:${s.toString().padStart(2,'0')}`;
+}
+
+function submitQuiz(){
+  clearInterval(timerInterval);
+  const timeTaken=Math.floor((Date.now()-startTime)/1000);
+  participant.timeTaken=timeTaken;
+  document.getElementById("quizSection").style.display="none";
+  document.getElementById("feedbackForm").style.display="block";
+}
+
+function submitFeedback(){
+  const fbName=document.getElementById("fbName").value.trim();
+  const fbText=document.getElementById("fbText").value.trim();
+  if(!fbName||!fbText){
+    alert("Please fill feedback form completely!");
+    return;
+  }
+  participant.feedback={fbName,fbText};
+  showResultsPage();
+}
+
+function showResultsPage(){
+  const total=questions.length;
+  const resDiv=document.getElementById("resultPage");
+  resDiv.style.display="block";
+  let html=`<h2>Results</h2>
+    <p>Name: ${participant.name}</p>
+    <p>Roll: ${participant.roll}</p>
+    <p>Score: ${participant.score}/${total}</p>
+    <p>Time Taken: ${participant.timeTaken} seconds</p>
+    <p>Feedback: ${participant.feedback.fbText}</p>
+    <h3>Correct Answers:</h3>`;
+  questions.forEach(q=>{
+    html+=`${q.q} - <span class="correct-answer">${q.options[q.answer]}</span><br>`;
+  });
+  resDiv.innerHTML=html;
+  localStorage.setItem("attempt_"+participant.roll,html);
+  saveResult(participant);
+}
+
+function saveResult(p){
+  let all=JSON.parse(localStorage.getItem("allResults")||"[]");
+  all.push(p);
+  localStorage.setItem("allResults",JSON.stringify(all));
+}
+
+function organiserLogin(){
+  const pwd=prompt("Enter organiser password:");
+  if(pwd===organiserPassword){
+    document.getElementById("organiserPanel").style.display="block";
+    showAllResults();
+  } else {
+    alert("Wrong password");
+  }
+}
+
+function showAllResults(){
+  const all=JSON.parse(localStorage.getItem("allResults")||"[]");
+  const div=document.getElementById("resultsTable");
+  div.innerHTML="";
+  all.forEach(r=>{
+    div.innerHTML+=`<p>${r.name} | ${r.roll} | Score: ${r.score}/${questions.length} | Time: ${r.timeTaken}s | Feedback: ${r.feedback.fbText}</p>`;
+  });
+}
+</script>
+</body>
+</html>
+
+
