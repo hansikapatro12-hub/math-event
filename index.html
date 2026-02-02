@@ -132,17 +132,40 @@ button:hover { transform:scale(1.05); box-shadow:0 0 12px #58a6ff; }
 const organiserPassword="admin123";
 
 // Generate 10 hubs × 3 nodes (dummy questions)
-let questions=[];
-for(let h=1;h<=10;h++){
-  for(let n=1;n<=3;n++){
-    questions.push({
-      hub:h,node:n,
-      q:`Hub ${h} - Question ${n}?`,
-      options:["Option A","Option B","Option C","Option D"],
-      answer:Math.floor(Math.random()*4)
-    });
-  }
-}
+
+let questions=[
+{hub:1,node:1,q:"Capital of France?",options:["Paris","London","Berlin","Madrid"],answer:0},
+ {hub:1,node:2,q:"2+2=?",options:["3","4","5","6"],answer:1},
+ {hub:1,node:3,q:"Red Planet?",options:["Earth","Venus","Mars","Jupiter"],answer:2},
+ {hub:2,node:1,q:"Largest ocean?",options:["Atlantic","Indian","Pacific","Arctic"],answer:2},
+ {hub:2,node:2,q:"Sun rises in?",options:["North","South","East","West"],answer:2},
+ {hub:2,node:3,q:"Fastest land animal?",options:["Cheetah","Lion","Horse","Tiger"],answer:0},
+ {hub:3,node:1,q:"H2O is?",options:["Oxygen","Hydrogen","Water","Carbon"],answer:2},
+ {hub:3,node:2,q:"Square root of 16?",options:["2","4","8","6"],answer:1},
+ {hub:3,node:3,q:"National bird of India?",options:["Peacock","Sparrow","Eagle","Parrot"],answer:0},
+ {hub:4,node:1,q:"Largest planet?",options:["Earth","Mars","Jupiter","Saturn"],answer:2},
+ {hub:4,node:2,q:"Speed of light approx?",options:["3x10^8 m/s","3x10^6 m/s","3000 m/s","30 m/s"],answer:0},
+ {hub:4,node:3,q:"Taj Mahal city?",options:["Delhi","Agra","Mumbai","Jaipur"],answer:1},
+ {hub:5,node:1,q:"Programming language?",options:["HTML","CSS","Python","Photoshop"],answer:2},
+ {hub:5,node:2,q:"Gateway of India city?",options:["Delhi","Mumbai","Chennai","Kolkata"],answer:1},
+ {hub:5,node:3,q:"Currency of Japan?",options:["Yen","Dollar","Won","Euro"],answer:0},
+ {hub:6,node:1,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:6,node:2,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:6,node:3,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:7,node:1,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:7,node:2,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:7,node:3,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:8,node:1,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:8,node:2,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:8,node:3,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:9,node:1,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:9,node:2,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:9,node:3,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:10,node:1,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:10,node:2,q:"myy name ?",options:["a","b","c","d"],answer:1},
+ {hub:10,node:3,q:"myy name ?",options:["a","b","c","d"],answer:1}
+ 
+];
 
 let participant={};
 let startTime,timerInterval,timeLeft=40*60;
@@ -323,5 +346,6 @@ function showAllResults(){
 </script>
 </body>
 </html>
+
 
 
