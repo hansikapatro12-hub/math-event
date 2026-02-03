@@ -134,37 +134,125 @@ const organiserPassword="admin123";
 // Generate 10 hubs × 3 nodes (dummy questions)
 
 let questions=[
-{hub:1,node:1,q:"Capital of Fra",options:["Paris","London","Berlin","Madrid"],answer:0},
- {hub:1,node:2,q:"2+2=?",options:["3","4","5","6"],answer:1},
- {hub:1,node:3,q:"Red Planet?",options:["Earth","Venus","Mars","Jupiter"],answer:2},
- {hub:2,node:1,q:"Largest ocean?",options:["Atlantic","Indian","Pacific","Arctic"],answer:2},
- {hub:2,node:2,q:"Sun rises in?",options:["North","South","East","West"],answer:2},
- {hub:2,node:3,q:"Fastest land animal?",options:["Cheetah","Lion","Horse","Tiger"],answer:0},
- {hub:3,node:1,q:"H2O is?",options:["Oxygen","Hydrogen","Water","Carbon"],answer:2},
- {hub:3,node:2,q:"Square root of 16?",options:["2","4","8","6"],answer:1},
- {hub:3,node:3,q:"National bird of India?",options:["Peacock","Sparrow","Eagle","Parrot"],answer:0},
- {hub:4,node:1,q:"Largest planet?",options:["Earth","Mars","Jupiter","Saturn"],answer:2},
- {hub:4,node:2,q:"Speed of light approx?",options:["3x10^8 m/s","3x10^6 m/s","3000 m/s","30 m/s"],answer:0},
- {hub:4,node:3,q:"Taj Mahal city?",options:["Delhi","Agra","Mumbai","Jaipur"],answer:1},
- {hub:5,node:1,q:"Programming language?",options:["HTML","CSS","Python","Photoshop"],answer:2},
- {hub:5,node:2,q:"Gateway of India city?",options:["Delhi","Mumbai","Chennai","Kolkata"],answer:1},
- {hub:5,node:3,q:"Currency of Japan?",options:["Yen","Dollar","Won","Euro"],answer:0},
- {hub:6,node:1,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:6,node:2,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:6,node:3,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:7,node:1,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:7,node:2,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:7,node:3,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:8,node:1,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:8,node:2,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:8,node:3,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:9,node:1,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:9,node:2,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:9,node:3,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:10,node:1,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:10,node:2,q:"myy name ?",options:["a","b","c","d"],answer:1},
- {hub:10,node:3,q:"myy name ?",options:["a","b","c","d"],answer:1}
- 
+{hub:1,node:1,q:"A number is increased by 20% and then decreased by 20%.
+What is the net change?", options:[" no change","2% decrease","4% decrease","5% decrease"], answer:1},
+ {hub:1,node:2,q:"Based on Q1, if the original number was 500, what is the final value?", options:["480","490","495","500"], answer:0},
+ {hub:1,node:3,q:"Based on Q2, what is the absolute loss incurred?", options:["10","15","20","25"], answer:2},
+ {hub:2,node:1,q:"Differentiate with respect to x:
+y = sin x · eˣ", options:["eˣ cos x","eˣ (sin x + cos x)","eˣ (sin x − cos x)","cos x · eˣ"], answer:1},
+ {hub:2,node:2,q:"Based on Question 1, find the value of dy/dx at x = π/2.", options:["e^(π/2)","0","−e^(π/2)","1"], answer:0},
+ {hub:2,node:3,:"Based on Question 2, evaluate:
+∫₀^(π/2) eˣ (sin x + cos x) dx", options:["e^(π/2) − 1","e^(π/2)","e − 1","Cannot be evaluated"], answer:0},
+ {hub:3,node:1,{q:"The sum of the first n terms of an AP is given by
+Sn = n(2n + 1).
+Find the 10th term of the AP.", options:["37","39","41","43"], answer:1 },
+ {hub:3,node:2,q:"Based on Question 1, find the common difference of the AP.", options:["3","4","5","6"], answer:1},
+ {hub:3,node:3,q:"Based on Question 2, find the first term of the AP.", options:["1","3","5","7"], answer:1},
+ {hub:4,node:1,q:"In a code-based puzzle, if
+CAT → 24
+DOG → 26
+
+Using the same logic, what is the value of BAT?", options:["21","22","23","24"], answer:0},
+ {hub:4,node:2,q:"Based on Q1, if the value of a word is calculated by sum of letter positions, what is the value of RAT?", options:["39","40","41","42"], answer:2},
+ {hub:4,node:3,q:"Based on Q2, which word will have a value of 44?", options:["CAT","BAT","HAT","MAT"], answer:3},
+ {hub:5,node:1,q:"#include <stdio.h>
+
+int main() {
+    int x = 10;
+    int y = x++ + ++x;
+    printf("%d", y);
+    return 0;
+}", options:["21","22","23","COMPILATION ERROR"], answer:2},
+ {hub:5,node:2,q:"#include <stdio.h>
+
+int main() {
+    int arr[] = {R, 20, 30, 40};
+    int *p = arr;
+    printf("%d", *(p + 2));
+    return 0;
+}", options:["10","20","30","40"], answer:2},
+ {hub:5,node:3,q:"#include <stdio.h>
+
+int fun(int n) {
+    if (n == 0)
+        return 1;
+    return n * fun(n - 1);
+}
+
+int main() {
+    printf("%d", fun(q));
+    return 0;
+}
+
+The Value Of  " q " is Answer   of   2nd question..", options:["1","2","6","COMPILATION ERROR"], answer:2},
+ {hub:6,node:1,q:"#include <stdio.h>
+
+int main() {
+    int i, sum = 0;
+
+    for(i = 1; i <= 5; i++) {
+        if(i % 2 == 0)
+            sum += i;
+    }
+
+    printf("%d", sum);
+    return 0;
+}", options:["6","9","15","10"], answer:0},
+ {hub:6,node:2,q:"#include <stdio.h>
+
+int main() {
+    char str[] = "HELLO";
+    char *p = str;
+
+    printf("%c", *(p + z/2));
+    return 0;
+}
+
+Where  z = Answer of 1st question.", options:["L","O","E","H"], answer:0},
+ {hub:6,node:3,q:"#include <stdio.h>
+
+struct Student {
+    int marks;
+};
+
+void update(struct Student s) {
+    s.marks = 90;
+}
+
+int main() {
+    struct Student s1;
+    s1.marks = z ;
+
+    update(s1);
+
+    printf("%d", s1.marks);
+    return 0;
+}
+
+Where  z is answer of 2nd question..", options:["15","06","GARBAGE VALUE","COMPILATION ERROR"], answer:1},
+ {hub:7,node:1,q:" Six people A, B, C, D, E and F are sitting in a straight line facing north.
+A sits third to the left of D.
+C sits immediately to the right of A.
+Which position does C occupy?", options:["2ND","3RD","4TH","5TH"], answer:2},
+ {hub:7,node:2,q:"Based on Question 1, B sits immediately to the left of D and F sits at one of the ends.
+Who sits at the extreme left end?", options:["A","B","E","F"], answer:3},
+ {hub:7,node:3,q:"Based on Question 2, who sits immediately to the right of B?", options:["A","C","D","E"], answer:2},
+ {hub:8,node:1,q:"Let f(x) = 2x + 3 and g(x) = x² − 1.
+Find the value of f(g(2)) + g(f(1)).", options:["12","14","16","18"], answer:2},
+ {hub:8,node:2,q:"Based on Question 1, find the value of:
+f(g(x)) − g(f(x))", options:["−x² + 4x + 4","x² − 4x − 4","−x² − 4x + 4","x² + 4x − 4"], answer:0},
+ {hub:8,node:3,q:"Based on Question 2, find the value of f(g(x)) − g(f(x)) when x = 2.", options:["4","6","8","10"], answer:1},
+ {hub:9,node:1,q:"A can complete a work in 12 days and B can complete the same work in 18 days.
+If they work together, in how many days will the work be completed?
+", options:["6","7","7.2","8"], answer:2},
+ {hub:9,node:2,q:"Based on Question 1, if A works alone for 2 days and then B joins, how many days will they take to complete the remaining work together?", options:["3","4","4.8","5"], answer:2},
+ {hub:9,node:3,"Based on Question 2, what fraction of the total work was completed by A alone?", options:["1/6","1/9","1/12","1/18"], answer:0},
+ {hub:10,node:1,q:"If
+x² + xy + y² = 12,
+find dy/dx.", options:["−(2x + y)/(x + 2y)","−(x + 2y)/(2x + y)","−(x + y)/(x − y)","−(2x − y)/(x + 2y)"], answer:0},
+ {hub:10,node:2,q:"Based on Question 1, find dy/dx at the point (2, 2).", options:["-1","-4/3","-2","-3/2"], answer:1},
+ {hub:10,node:3,q:"Based on Question 2, evaluate:
+∫₀³ (4x / 3) dx", options:["4","6","8","12"], answer:2}
 ];
 
 let participant={};
@@ -346,6 +434,7 @@ function showAllResults(){
 </script>
 </body>
 </html>
+
 
 
 
